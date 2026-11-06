@@ -21,7 +21,7 @@ class FloatService : Service() {
     private var tv: TextView? = null
     private var watcher: View? = null
     private var area: View? = null
-    private var proc: Process? = null
+    private var proc: java.lang.Process? = null
     @Volatile private var alive = true
 
     override fun onBind(i: Intent?): IBinder? = null
@@ -105,8 +105,9 @@ class FloatService : Service() {
                 val dm = DisplayMetrics(); @Suppress("DEPRECATION") wm.defaultDisplay.getRealMetrics(dm)
                 val rx = int("rx", 100); val ry = int("ry", 400); val rw = int("rw", 400); val rh = int("rh", 400)
                 var cx = 0L; var cy = 0L; var pend = false
-                proc = Sh.run("getevent -l")
-                proc!!.inputStream.bufferedReader().forEachLine { l ->
+                val p = Sh.run("getevent -l")
+                proc = p
+                p.inputStream.bufferedReader().forEachLine { l ->
                     if (!alive) return@forEachLine
                     val t = l.trim().split(Regex("\\s+"))
                     if (t.size < 4) return@forEachLine
